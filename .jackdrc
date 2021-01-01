@@ -1,1 +1,1 @@
-/home/a/.jackdrc
+/usr/bin/jackd -dalsa -r48000 -p128 -n3 -D -Chw:CODEC -Phw:CODEC
