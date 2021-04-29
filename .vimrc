@@ -13,7 +13,8 @@
 " set guifont=*
 " set guifont&
 
-" set guifont=Terminus\ \(TTF)\ Medium\ 12
+" set guifont=Terminus\ \(TTF)\ Medium\ 15
+ set guifont=Terminus:h13
 " set guifont=TerminessTTF\ Nerd\ Font\ Medium\ 12
 " set guifont=Hack\ 12
 " set guifont=SauceCodePro\ Nerd\ Font\ Medium\ 12
@@ -24,7 +25,7 @@
 " set guifont=FuraCode\ Nerd\ Font\ 12
 " set guifont=FuraMonoForPowerline\ Nerd\ Font\ 12
 " ok
- set guifont=Iosevka\ Nerd\ Font\ Medium\ 15
+" set guifont=Iosevka\ Nerd\ Font\ Medium\ 15
 " ok
 " set guifont=DejaVuSansMono\ Nerd\ Font\ 11
 " set guifont=CodeNewRoman\ Nerd\ Font\ 15
@@ -52,6 +53,39 @@ set updatetime=300
 " always show signcolumns
 set signcolumn=yes
 
+
+" ALE settgins
+let g:ale_disable_lsp = 1
+let g:ale_lint_on_insert_leave = 0
+let g:ale_lint_delay = 1000
+" removed cppcheck, takes to much CPU cycles
+let g:ale_linters = {'cpp' :['cc', 'ccls', 'clangcheck', 'clangd', 'clangtidy', 'clazy', 'cpplint', 'cquery', 'flawfinder'], }
+
+" vim-lsp-cxx-highlight
+let g:lsp_cxx_hl_use_text_props = 1
+
+" material theme setup
+
+" For Neovim 0.1.3 and 0.1.4 - https://github.com/neovim/neovim/pull/2198
+if (has('nvim'))
+  let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
+endif
+
+" For Neovim > 0.1.5 and Vim > patch 7.4.1799 - https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162
+" Based on Vim patch 7.4.1770 (`guicolors` option) - https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd
+" https://github.com/neovim/neovim/wiki/Following-HEAD#20160511
+if (has('termguicolors'))
+  set termguicolors
+endif
+
+if has('gui_running')
+    let g:material_terminal_italics = 1
+endif
+" default' | 'palenight' | 'ocean' | 'lighter' | 'darker' | 'default-community' | 'palenight-community' | 'ocean-community' | 'lighter-community' | 'darker-community'
+let g:material_theme_style = 'default'
+" material theme setup end
+
+
 " set the runtime path to include Vundle and initialize
 " set rtp+=~/.vim/bundle/Vundle.vim
 set rtp+=~/.vim/autoload/plug.vim
@@ -69,11 +103,15 @@ call plug#begin('~/.vim/plugged')
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 Plug 'dense-analysis/ale'
+Plug 'jackguo380/vim-lsp-cxx-highlight'
 
 Plug 'derekwyatt/vim-fswitch'
 Plug 'ctrlpvim/ctrlp'
 " colorscheme
 Plug 'morhetz/gruvbox'
+Plug 'sainnhe/gruvbox-material'
+Plug 'kaicataldo/material.vim', { 'branch': 'main' }
+
 " using you complete me instead
 " Plugin 'syntastic'
 Plug 'will133/vim-dirdiff'
@@ -94,7 +132,7 @@ endif
 
 " Bundle "gilligan/vim-lldb"
 
-Plug 'octol/vim-cpp-enhanced-highlight'
+" Plug 'octol/vim-cpp-enhanced-highlight'
 
 
 "
@@ -143,12 +181,26 @@ syntax on
 
  set background=dark
 
+ " soft medium hard
 let g:gruvbox_contrast_light = 'soft'
-let g:gruvbox_contrast_dark = 'soft'
+let g:gruvbox_contrast_dark = 'hard' 
 let g:gruvbox_number_column = 'bg1'
 " colorscheme mydesert
- colorscheme gruvbox
-"colorscheme PaperColor
+" colorscheme gruvbox
+" colorscheme PaperColor
+ colorscheme material
+
+" gruvbox material settings(medium, soft, hard)`
+let g:gruvbox_material_background = 'medium'
+let g:gruvbox_material_disable_italic_comment = 1
+let g:gruvbox_material_enable_bold = 1
+" auto, red orange yellow green aqua blue purple'
+let g:gruvbox_material_cursor = 'orange'
+let g:gruvbox_material_better_performance = 1
+" colorscheme gruvbox-material
+
+" goParamName defined in material theme only
+ hi link LspCxxHlSymParameter goParamName 
 
 let g:PaperColor_Theme_Options = {
   \   'language': {
@@ -186,6 +238,8 @@ set incsearch		" Incremental search
 set autowrite		" Automatically save before commands like :next and :make
 set hidden             " Hide buffers when they are abandoned
 "set mouse=a		" Enable mouse usage (all modes)
+
+let mapleader = "\\"
 
 
 set scrolloff=5
@@ -307,7 +361,13 @@ nnoremap <F10> :b <C-Z>
 map <F3> :NERDTreeToggle<CR>
 
 map <C-F7> :!cmake ..<CR>
-map <F7> :make<CR>
+map <F7> :unsilent make<CR>
+" command -nargs=? -complet=file Make execute 'make <args>' | execute 'redraw!' | execute 'cwindow'
+" map <F7> :unsilent Make<CR>
+" map <silent> <C-F7> :Make %:t.o<CR>
+
+" toggle error window copen/cclose
+map <F4> :cw<CR>
 autocmd FileType glsl nnoremap <F7> :GlslValidate<CR>
 
 " You Complete Me ========================================================
@@ -354,6 +414,8 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " ~coc ========================================================
 
+" switching between cpp & h
+nnoremap <Leader>q :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
 
 map <C-K> :py3f /usr/share/clang/clang-format.py<cr>
 imap <C-K> <c-o>:py3f /usr/share/clang/clang-format.py<cr>
@@ -362,6 +424,7 @@ nmap <M-O> :FSHere<CR>
 nmap <M-S-O> :FSSplitRight<CR>
 
 imap kj <ESC>
+imap <Caps> <ESC>
 
 command! GlslValidate !~/prog/tools/glslangValidator %:p
 
@@ -371,7 +434,7 @@ command! GlslValidate !~/prog/tools/glslangValidator %:p
 
 augroup filetypedetect
 " Override filetypes for certain files
-	autocmd! BufNewFile,BufRead *.frag,*.vert,*hglsl set ft=glsl
+	autocmd! BufNewFile,BufRead *.frag,*.vert,*.hglsl set ft=glsl
 augroup END
 
 set runtimepath^=~/.vim/bundle/ctrlp.vim

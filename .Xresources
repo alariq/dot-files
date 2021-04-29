@@ -35,6 +35,12 @@ XTerm.vt100.color13:rgb:ad/7f/a8
 XTerm.vt100.color14:rgb:34/e2/e2
 XTerm.vt100.color15:rgb:ee/ee/ec
 
+! handle Meta (Alt) + keypress to set the 8th bit
+URxvt.meta8: true
+
+! this is for Contrl+Shift+<key> to work, but does not seem to help
+ URxvt.iso14755: false
+ URxvt.iso14755_52: false
 
 ! do not scroll with output
 URxvt*scrollTtyOutput: false
@@ -58,7 +64,7 @@ URxvt.keysym.Control-Right:    \033[1;5C
 
 URxvt.font: -xos4-terminus-medium-r-normal-*-14-140-72-72-c-80-iso10646-1
 !URxvt.boldFont: -*-terminus-bold-r-normal-*-*-140-72-72-*-*-*-u
-!URxvt.font: xft:Terminus:pixelsize=14;antialias=false
+!URxvt.font: xft:Terminus:pixelsize=14:antialias=false
 !URxvt.font: -*-terminus-medium-r-normal-*-14-140-72-72-*-*-*-*
 !URxvt.font: -*-terminus-medium-r-*-*-12-120-*-*-*-*-iso10646-*
 !
@@ -71,10 +77,19 @@ URxvt.font: -xos4-terminus-medium-r-normal-*-14-140-72-72-c-80-iso10646-1
 URxvt.foreground: rgb:b2/b2/b2
 URxvt.background: rgb:08/0/08
 
-URxvt.perl-ext-common: default,matcher
+URxvt.perl-ext-common: default,matcher,url-select,resize-font
 URxvt.url-launcher: /usr/bin/xdg-open
 URxvt.matcher.button: 1
 URxvt.matcher.rend.0: Uline Bold fg5a
+
+! keybard selection Alt-u to go into selection mode (j,k - up down, Return - follow url, y - yank, Shift-Ins - paste)
+URxvt.keysym.M-u: perl:url-select:select_next
+URxvt.url-select.launcher: /usr/bin/xdg-open
+URxvt.url-select.underline: true
+
+! for perl resize-font ext (does not seem to work)
+URxvt.keysym.C-Down:  resize-font:smaller
+URxvt.keysym.C-Up:    resize-font:bigger
 
 URxvt*skipBuiltinGlyphs:    true
 

@@ -76,4 +76,20 @@ alias gl='git log --oneline'
 
 source passwdgen.bash
 
-xinput --set-prop 18 318 -0.75
+#set mouse sensitivity (was used for a diferent mouse then I have now)
+#xinput --set-prop 18 318 -0.75
+
+#set key repeat rate and delay after first press
+xset r rate 300 50
+
+#map caps to super
+#setxkbmap -option caps:super -variant altgr-intl
+
+# treat capc as escape if pressed once
+killall xcape 2>/dev/null ; xcape -e 'Caps_Lock=Escape'
+
+# LibreOffice - focus flicking between main window and dialog
+export SAL_USE_VCLPLUGIN=gen lowriter
+
+export BROWSER=firefox
+
