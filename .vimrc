@@ -14,7 +14,7 @@
 " set guifont&
 
 " set guifont=Terminus\ \(TTF)\ Medium\ 15
- set guifont=Terminus:h13
+ set guifont=Terminus:b:h15
 " set guifont=TerminessTTF\ Nerd\ Font\ Medium\ 12
 " set guifont=Hack\ 12
 " set guifont=SauceCodePro\ Nerd\ Font\ Medium\ 12
@@ -53,6 +53,9 @@ set updatetime=300
 " always show signcolumns
 set signcolumn=yes
 
+" use c++ style comments
+set commentstring=//\ %s
+
 
 " ALE settgins
 let g:ale_disable_lsp = 1
@@ -74,17 +77,17 @@ endif
 " For Neovim > 0.1.5 and Vim > patch 7.4.1799 - https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162
 " Based on Vim patch 7.4.1770 (`guicolors` option) - https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd
 " https://github.com/neovim/neovim/wiki/Following-HEAD#20160511
-if (has('termguicolors'))
-  set termguicolors
-endif
+" sebi: disabled as this breaks colours in terminal
+"if (has('termguicolors'))
+"  set termguicolors
+"endif
 
 if has('gui_running')
-    let g:material_terminal_italics = 1
+    let g:material_terminal_italics = 0
 endif
 " default' | 'palenight' | 'ocean' | 'lighter' | 'darker' | 'default-community' | 'palenight-community' | 'ocean-community' | 'lighter-community' | 'darker-community'
-let g:material_theme_style = 'default'
+let g:material_theme_style = 'default-community'
 " material theme setup end
-
 
 " set the runtime path to include Vundle and initialize
 " set rtp+=~/.vim/bundle/Vundle.vim
@@ -134,6 +137,12 @@ endif
 
 " Plug 'octol/vim-cpp-enhanced-highlight'
 
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
+Plug 'puremourning/vimspector'
 
 "
 " " The following are examples of different formats supported.
@@ -173,22 +182,44 @@ if !has('gui_running')
   set t_Co=256
 else   
   " because console verion uses pixel fonts
-  let g:gruvbox_italic=1
+  let g:gruvbox_italic=0
 endif
 
 set nocompatible
 syntax on
+set background=dark
 
- set background=dark
+function! MyHighlights() abort
+    " these hightights come lsp-cxx-hightight
+    " goParamName defined in material theme only
+    hi link LspCxxHlSymParameter Identifier
+    hi link LspCxxHlSymVariable Normal
+    hi link LspCxxHlSymField goParamName 
+    hi link LspCxxHlGroupEnumConstant Macro
+    hi link LspCxxHlGroupNamespace Structure
+    hi link LspCxxHlGroupMemberVariable Normal
+endfunction
+" this should be before colorscheme is applied
+" apply highlights when colorscheme is changed
+" https://gist.github.com/romainl/379904f91fa40533175dfaec4c833f2f
+augroup MyColors
+    autocmd!
+    autocmd ColorScheme * call MyHighlights()
+    "autocmd ColorScheme material call MyHighlights()
+augroup END
+
+ let g:bg_tango=1
 
  " soft medium hard
 let g:gruvbox_contrast_light = 'soft'
 let g:gruvbox_contrast_dark = 'hard' 
 let g:gruvbox_number_column = 'bg1'
 " colorscheme mydesert
-" colorscheme gruvbox
 " colorscheme PaperColor
+" colorscheme gruvbox
  colorscheme material
+ " colorscheme tango2
+" colorscheme solarized 
 
 " gruvbox material settings(medium, soft, hard)`
 let g:gruvbox_material_background = 'medium'
@@ -199,8 +230,6 @@ let g:gruvbox_material_cursor = 'orange'
 let g:gruvbox_material_better_performance = 1
 " colorscheme gruvbox-material
 
-" goParamName defined in material theme only
- hi link LspCxxHlSymParameter goParamName 
 
 let g:PaperColor_Theme_Options = {
   \   'language': {
@@ -275,7 +304,7 @@ set statusline+=\
 
 
 " possible options: indent, eol. Or just remove to return to default
-set backspace=start 
+set backspace=start,indent,eol 
 set number
 
 set hlsearch " highlight search results
@@ -350,25 +379,38 @@ if has("gui_running")
     nmap <C-F12> :call FontSizePlus()<CR>
 endif
 
-"nnoremap <Tab> <C-w>w
+nnoremap <Tab> <C-w>w
 nnoremap <S-Tab> :bp<CR>
-nnoremap <C-Tab> :buffers<CR>:buffer<Space>
+" nnoremap <C-Tab> :buffers<CR>:buffer<Space>
+nnoremap <C-Tab> :tabnext<CR>
 
 set wildchar=<Tab> wildmenu wildmode=list,full
 set wildcharm=<C-Z>
-nnoremap <F10> :b <C-Z>
+"nnoremap <F10> :b <C-Z>
 
 map <F3> :NERDTreeToggle<CR>
 
+command! GlslValidate !~/prog/tools/glslangValidator %:p
+function s:MyCompile()
+    if &ft == 'glsl'
+        echo "glsl"
+        execute 'GlslValidate'
+    elseif &ft=='cpp' || &ft=='c'
+        echo "c++"
+        execute 'make'
+    else
+        echo "unsupported file fol compilation"
+    endif
+endfunction
+
 map <C-F7> :!cmake ..<CR>
-map <F7> :unsilent make<CR>
+map <F7> :call <SID>MyCompile()<CR>
 " command -nargs=? -complet=file Make execute 'make <args>' | execute 'redraw!' | execute 'cwindow'
 " map <F7> :unsilent Make<CR>
 " map <silent> <C-F7> :Make %:t.o<CR>
 
 " toggle error window copen/cclose
 map <F4> :cw<CR>
-autocmd FileType glsl nnoremap <F7> :GlslValidate<CR>
 
 " You Complete Me ========================================================
 nnoremap <F12> :YcmCompleter GoToDeclaration<CR>
@@ -399,6 +441,22 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Triger `autoread` when files changes on disk
+" https://unix.stackexchange.com/questions/149209/refresh-changed-content-of-file-opened-in-vim/383044#383044
+" https://vi.stackexchange.com/questions/13692/prevent-focusgained-autocmd-running-in-command-line-editing-mode
+    autocmd FocusGained,BufEnter,CursorHold,CursorHoldI *
+            \ if mode() !~ '\v(c|r.?|!|t)' && getcmdwintype() == '' | checktime | endif
+
+" Notification after file change
+" https://vi.stackexchange.com/questions/13091/autocmd-event-for-autoread
+autocmd FileChangedShellPost *
+  \ echohl WarningMsg | echo "File changed on disk. Buffer reloaded." | echohl None
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
@@ -417,16 +475,40 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 " switching between cpp & h
 nnoremap <Leader>q :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
 
+" yank and paste using clipboard
+vnoremap <leader>y "+y
+nnoremap <leader>p "+p
+
 map <C-K> :py3f /usr/share/clang/clang-format.py<cr>
 imap <C-K> <c-o>:py3f /usr/share/clang/clang-format.py<cr>
 
+" fswitch
 nmap <M-O> :FSHere<CR>
 nmap <M-S-O> :FSSplitRight<CR>
 
 imap kj <ESC>
 imap <Caps> <ESC>
 
-command! GlslValidate !~/prog/tools/glslangValidator %:p
+
+" fzf
+map <leader>o :GFiles<CR> 
+
+" vimspector
+" let g:vimspector_enable_mappings = 'HUMAN'
+let g:vimspector_enable_mappings = 'VISUAL_STUDIO'
+" for normal mode - the word under the cursor
+nmap <Leader>di <Plug>VimspectorBalloonEval
+" for visual mode, the visually selected text
+xmap <Leader>di <Plug>VimspectorBalloonEval
+
+" Show syntax highlighting groups for word under cursor
+nmap <C-F1> :call <SID>SynStack()<CR>
+function! <SID>SynStack()
+    if !exists("*synstack")
+        return
+    endif
+    echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
 
 " how to check if key is mapped:
 " e.g.:
@@ -436,6 +518,15 @@ augroup filetypedetect
 " Override filetypes for certain files
 	autocmd! BufNewFile,BufRead *.frag,*.vert,*.hglsl set ft=glsl
 augroup END
+
+au syntax c call MyCadd()
+au syntax cpp call MyCadd()
+function! MyCadd()
+    " contained added to only match it if mentioned in the "contains" field of
+    " another mathch (I think vimTodo is mentioned in a comment group)
+    syn match cTodo contained "!NB:"
+endfun
+
 
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 

@@ -1,4 +1,6 @@
 ~/.fehbg
 setxkbmap -model pc105 -layout us,ua -option grp:win_menu_switch
+# remove right alt to ber mod1 modifier
+# xmodmap -e 'remove mod1 = Alt_R'
 xset b off
 #setxkbmap -model pc101 -layout us,ru,ua -option grp:lwin_toggle

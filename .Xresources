@@ -5,6 +5,9 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
+! nice documentation here: https://addy-dclxvi.github.io/post/configuring-urxvt/
+
+
 XTerm*customization: -color
 
 XTerm*locale: true
@@ -74,9 +77,6 @@ URxvt.font: -xos4-terminus-medium-r-normal-*-14-140-72-72-c-80-iso10646-1
 !    [codeset=JISX0208]xft:Kochi Gothic:antialias=false, \
 !    xft:Code2000:antialias=false
 
-URxvt.foreground: rgb:b2/b2/b2
-URxvt.background: rgb:08/0/08
-
 URxvt.perl-ext-common: default,matcher,url-select,resize-font
 URxvt.url-launcher: /usr/bin/xdg-open
 URxvt.matcher.button: 1
@@ -102,21 +102,34 @@ URxvt.colorIT:  green
 URxvt.saveLines:        8192
 URxvt.visualBell:       true
 
-! From Tango team of gnome-terminal (colors taken from xfce4/terimal/colorschemes)
-URxvt.color0:#000000
-URxvt.color1:#cc0000
-URxvt.color2:#4e9a06
-URxvt.color3:#c4a000
-URxvt.color4:#3465a4
-URxvt.color5:#75507b
-URxvt.color6:#06989a
-URxvt.color7:#d3d7cf
+URxvt.foreground: rgb:b2/b2/b2
+URxvt.background: rgb:08/0/08
 
+
+! From Tango team of gnome-terminal (colors taken from xfce4/terimal/colorschemes)
+
+! black
+URxvt.color0:#000000
 URxvt.color8:#555753
+! red 
+URxvt.color1:#cc0000
 URxvt.color9:#ef2929
+! green
+URxvt.color2:#4e9a06
 URxvt.color10:#8ae234
+! yellow
+URxvt.color3:#c4a000
 URxvt.color11:#fce94f
+! blue
+URxvt.color4:#3465a4
 URxvt.color12:#739fcf
+! magenta
+URxvt.color5:#75507b
 URxvt.color13:#ad7fa8
+! cyan
+URxvt.color6:#06989a
 URxvt.color14:#34e2e2
+! white
+URxvt.color7:#d3d7cf
 URxvt.color15:#eeeeec
+

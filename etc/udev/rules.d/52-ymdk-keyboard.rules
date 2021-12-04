@@ -1,0 +1,3 @@
+# https://wiki.archlinux.org/title/Udev
+# udevadm info --attribute-walk --path=$(udevadm info --query=path --name=/dev/usb/hiddev0)
+ACTION=="add", SUBSYSTEM==”usbmisc”, ATTR{idVendor}==”20a0”, ATTR{idProduct}==”422d”, RUN+="/home/a/scripts/udev/ymdk.sh" 
