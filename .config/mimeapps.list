@@ -1,0 +1,21 @@
+[Default Applications]
+inode/directory=ranger.desktop
+application/pdf=mupdf.desktop;
+x-scheme-handler/msteams=teams.desktop
+x-scheme-handler/rdp=org.remmina.Remmina.desktop
+x-scheme-handler/spice=org.remmina.Remmina.desktop
+x-scheme-handler/vnc=org.remmina.Remmina.desktop
+x-scheme-handler/remmina=org.remmina.Remmina.desktop
+application/x-remmina=org.remmina.Remmina.desktop
+x-scheme-handler/tg=userapp-Telegram Desktop-VCF9Y0.desktop
+image/png=feh.desktop
+
+[Added Associations]
+x-scheme-handler/rdp=org.remmina.Remmina.desktop;
+x-scheme-handler/spice=org.remmina.Remmina.desktop;
+x-scheme-handler/vnc=org.remmina.Remmina.desktop;
+x-scheme-handler/remmina=org.remmina.Remmina.desktop;
+application/x-remmina=org.remmina.Remmina.desktop;
+text/plain=gvim.desktop;
+x-scheme-handler/tg=userapp-Telegram Desktop-VCF9Y0.desktop;
+application/pdf=mupdf.desktop;
