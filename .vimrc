@@ -144,6 +144,10 @@ Plug 'junegunn/fzf.vim'
 
 Plug 'puremourning/vimspector'
 
+Plug 'voldikss/vim-floaterm'
+Plug 'skywind3000/asyncrun.vim'
+
+
 "
 " " The following are examples of different formats supported.
 " " Keep Plugin commands between vundle#begin/end.
@@ -266,7 +270,7 @@ set smartcase		" Do smart case matching
 set incsearch		" Incremental search
 set autowrite		" Automatically save before commands like :next and :make
 set hidden             " Hide buffers when they are abandoned
-"set mouse=a		" Enable mouse usage (all modes)
+set mouse=a		" Enable mouse usage (all modes)
 
 let mapleader = "\\"
 
@@ -379,16 +383,33 @@ if has("gui_running")
     nmap <C-F12> :call FontSizePlus()<CR>
 endif
 
-nnoremap <Tab> <C-w>w
+nnoremap <leader><Tab> <C-w>w
 nnoremap <S-Tab> :bp<CR>
 " nnoremap <C-Tab> :buffers<CR>:buffer<Space>
 nnoremap <C-Tab> :tabnext<CR>
+
+" ability to use . (to repeat last action) in a visual mode
+xmap <silent> . :normal .<CR>
 
 set wildchar=<Tab> wildmenu wildmode=list,full
 set wildcharm=<C-Z>
 "nnoremap <F10> :b <C-Z>
 
+map <F1> :so ~/prog/multithreaded-renderer/Session.vim
+" actually need to check if it is open, then close save and open
+map <F2> :silent :NERDTreeToggle<CR>:VimspectorMkSession<CR>:mks!<CR>:NERDTreeToggle<CR>
 map <F3> :NERDTreeToggle<CR>
+
+" close NERDTree because it does not work good with session restore when it
+" was opened when session was saved (mksession)
+autocmd VimLeave * NERDTreeClose
+autocmd VimLeave * VimspectorMkSession
+" autocmd VimLeave * mksession
+
+map <leader>e <Plug>VimspectorBalloonEval
+
+
+" let g:asyncrun_open = '1'
 
 command! GlslValidate !~/prog/tools/glslangValidator %:p
 function s:MyCompile()
@@ -397,7 +418,9 @@ function s:MyCompile()
         execute 'GlslValidate'
     elseif &ft=='cpp' || &ft=='c'
         echo "c++"
-        execute 'make'
+        ":copen
+        "execute ':AsyncRun make'
+        :AsyncRun -post=cwindow make -j8
     else
         echo "unsupported file fol compilation"
     endif
@@ -411,12 +434,6 @@ map <F7> :call <SID>MyCompile()<CR>
 
 " toggle error window copen/cclose
 map <F4> :cw<CR>
-
-" You Complete Me ========================================================
-nnoremap <F12> :YcmCompleter GoToDeclaration<CR>
-nnoremap <F11> :YcmCompleter GoToDefinition<CR>
-nnoremap <F2> :YcmCompleter FixIt<CR>
-
 
 " coc ========================================================
 

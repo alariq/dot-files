@@ -74,7 +74,7 @@ alias pbpaste='xsel --clipboard --output'
 alias gs='git status'
 alias gl='git log --oneline'
 
-source passwdgen.bash
+source ~/passwdgen.bash
 
 #set mouse sensitivity (was used for a diferent mouse then I have now)
 #xinput --set-prop 18 318 -0.75
@@ -92,4 +92,12 @@ killall xcape 2>/dev/null ; xcape -e 'Caps_Lock=Escape'
 export SAL_USE_VCLPLUGIN=gen lowriter
 
 export BROWSER=firefox
+
+# make gamma look fonts more nice in the Firefox
+xrandr --output LVDS1 --gamma 0.8
+
+set OPENCV_DNN_TEST_DATA_PATH=~/opencv/dnn_test_data/
+
+# remap left and right buttons on my vertical wireless mouse
+source ~/scripts/switch_mouse_lr_buttons.sh
 
