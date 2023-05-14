@@ -1,0 +1,12 @@
+conky.config = {
+    background = true
+    ,out_to_console = true
+    ,out_to_x = false
+    ,update_interval = 1.0
+}
+
+ -- alternative way to get total net traffic: ifstat -T 0.1 1 | tail -1 | awk '{print $5}' // or $6 for upload
+ -- download speed: ifstat -p -t 1 | grep wlp8s0 | awk -v FS=" "  '{print $6}'
+ --  upload speed: ifstat -p -t 1 | grep wlp8s0 | awk -v FS=" "  '{print $8}'
+ 
+conky.text = [[^fg(\#D0D0FF) ^i(/home/a/.xmonad/dzen2/cpu.xbm) ${cpu}% ^fg(\#C0FFC0) ^i(/home/a/.xmonad/dzen2/mem.xbm) ${memperc}%  ^fg(\#FFFFFF)${acpitemp}C ^i(/home/a/.xmonad/dzen2/battery.xbm) ^fg(\#FFFFFF)${exec /home/a/.xmonad/scripts/battery} ${freq_g}GHz ^fg(\#ebac54) ${if_existing /proc/net/route wlan0} ^i(/home/a/.xmonad/dzen2/net_wired.xbm) ^fg(\#00aa4a) ^i(/home/a/.xmonad/dzen2/net_down_03.xbm)${downspeed wlan0} ^fg(\#ff3333) ^i(/home/a/.xmonad/dzen2/net_up_03.xbm)${upspeed wlan0} $endif ^fg(\#ebac54) ^i(/home/a/.xmonad/dzen2/mpd.xbm) ^fg(\#ebac54) ^i(/home/a/.xmonad/dzen2/volume.xbm) ^fg(\#00ffff)${exec amixer get Master Playback Volume | egrep -o "[0-9]+%" | head -1 | egrep -o "[0-9]*"}% ^fg(\#ebac54) ^i(/home/a/.xmonad/dzen2/clock.xbm) ^fg(\#FFFFFF) ${time %d %m %Y} ^fg(\#ebac54) ${time %R} ^fg(\#00FFFF)${exec xkblayout-state print %s} ]]
